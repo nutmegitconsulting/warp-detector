@@ -52,7 +52,7 @@ Run the container in detached mode to start the container in the background. It 
 docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443 -v warp-certs:/certs --init warp-detector-server
 ```
 
-**Note:** Note, this command serves the TLS certificate on every IP of the host machine. If you want to lock to a specific IP, replace 0.0.0.0 with the specific IP you are interested in using for this. If your host machine only ever has a single IP, you shouldn’t have to worry about this.
+**Note:** Note, this command serves the TLS certificate on every IP of the host machine. If you want to lock to a specific IP, replace 0.0.0.0 with the specific IP. If your host machine only ever has a single IP, you shouldn’t have to worry about this.
 
 
 ## **Configuration**
