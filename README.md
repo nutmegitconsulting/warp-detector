@@ -1,6 +1,6 @@
 # **Cloudflare WARP Local Network Detector**
 
-A simple, containerized TLS server designed to enable Cloudflare WARP's "Managed Network" feature for easy local network detection. This allows the WARP client to intelligently detect when it is on a trusted network and apply custom profiles, such as excluding local traffic from the tunnel. This container simplifies the process of setting up the required TLS detection endpoint.
+A simple, containerized TLS server designed to enable Cloudflare WARP's "Managed Network" feature for easy local network detection. This allows the WARP client to intelligently detect when it is on a trusted network and apply custom profiles, such as excluding local traffic from the tunnel. This container simplifies the process of setting up the [required TLS detection endpoint](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/configure-warp/managed-networks/).
 
 ## **Prerequisites**
 
