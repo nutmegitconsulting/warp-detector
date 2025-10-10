@@ -19,20 +19,26 @@ This guide will walk you through building the container, generating your unique 
 
 Open a terminal (or PowerShell) and clone the project files:
 
+```
 git clone https://github.com/nutmegitconsulting/warp-detector.git  
 cd warp-detector
+```
 
 **2\. Build the Docker Image**
 
 Build the local container image from the source code. This image will be named warp-detector-server.
 
+```
 docker build \-t warp-detector-server .
+```
 
 **3\. Run the One-Time Interactive Setup**
 
 This command will temporarily start the container to generate a unique TLS certificate. The certificate will be stored in a persistent Docker volume named warp-certs.
 
+```
 docker run \-it \--rm \-v warp-certs:/certs warp-detector-server setup
+```
 
 The script will prompt you for a hostname. After it runs, it will print a **SHA-256 Fingerprint**. Copy this value and save it for the next step.
 
@@ -40,7 +46,9 @@ The script will prompt you for a hostname. After it runs, it will print a **SHA-
 
 Run the container in detached mode to start the server in the background. It will automatically restart unless manually stopped.
 
+```
 docker run \-d \--restart unless-stopped \--name warp-detector \-p 4443:4443 \-v warp-certs:/certs \--init warp-detector-server
+```
 
 **Note:** By default, the server listens on all network interfaces. To bind to a specific IP, replace the port mapping with \-p YOUR\_IP:4443:4443.
 
