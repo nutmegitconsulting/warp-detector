@@ -9,7 +9,7 @@ Before you begin, ensure you have the following:
 * A host machine (Linux, macOS, or Windows) with a static or DHCP-reserved IP address. A Linux host is recommended for easily running the service on system boot.  
 * Docker Desktop installed.  
 * A Cloudflare Zero Trust account.  
-* Git installed on your host machine.
+* Git installed on your host machine. (You can use a browser to download instead of launching Git, just [follow this link](https://github.com/nutmegitconsulting/warp-detector/archive/refs/heads/main.zip) to get the .zip file and unpack them all into a folder called warp-detector.)
 
 ## **Quick Start Guide**
 
