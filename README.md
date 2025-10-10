@@ -34,23 +34,26 @@ docker build \-t warp-detector-server .
 
 **3\. Run the One-Time Interactive Setup**
 
-This command will temporarily start the container to generate a unique TLS certificate. The certificate will be stored in a persistent Docker volume named warp-certs.
+* This command starts the container in interactive mode (-it) and automatically removes it when finished (--rm). Its only purpose is to create your certificate files and display the information you need. The -v warp-certs:/certs:z part creates a persistent volume named warp-certs where your new certificate will be safely stored.
 
 ```
 docker run \-it \--rm \-v warp-certs:/certs warp-detector-server setup
 ```
+* Follow the On-Screen Prompts:  
+   * The script will prompt you to enter a **hostname** (the default is warp-detector.homelan.local).  
+   * It will then generate the certificate and print a summary of the critical information.
+* Copy the Output: The script will display the SHA-256 Fingerprint. You will need this for the CloudFlare setup
 
-The script will prompt you for a hostname. After it runs, it will print a **SHA-256 Fingerprint**. Copy this value and save it for the next step.
+**4\. Start the Container**
 
-**4\. Start the Server**
-
-Run the container in detached mode to start the server in the background. It will automatically restart unless manually stopped.
+Run the container in detached mode to start the container in the background. It will automatically restart unless manually stopped.
 
 ```
-docker run \-d \--restart unless-stopped \--name warp-detector \-p 4443:4443 \-v warp-certs:/certs \--init warp-detector-server
+docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443 -v warp-certs:/certs --init warp-detector-server
 ```
 
-**Note:** By default, the server listens on all network interfaces. To bind to a specific IP, replace the port mapping with \-p YOUR\_IP:4443:4443.
+**Note:** Note, this command serves the TLS certificate on every IP of the host machine. If you want to lock to a specific IP, replace 0.0.0.0 with the specific IP you are interested in using for this. If your host machine only ever has a single IP, you shouldn’t have to worry about this.
+
 
 ## **Configuration**
 
@@ -64,9 +67,9 @@ docker run \-d \--restart unless-stopped \--name warp-detector \-p 4443:4443 \-v
    * **TLS Cert SHA-256:** Paste the fingerprint you copied from the setup step.  
 4. Click **Save**.
 
-### **Part 2: Configure Client Devices**
+### **Part 2: Configure DNS**
 
-For the WARP client to find your new server, you must make its hostname reachable.
+For the WARP client to find your new container, you must make its hostname reachable.
 
 * Method 1 (Recommended): Local DNS Server  
   If you run a local DNS server (like Pi-hole), create an A Record that points the hostname to the internal IP address of the machine running the Docker container.  
@@ -87,12 +90,13 @@ Create a new profile to apply custom rules when a device is on your managed netw
    * **Value:** Select the network location you just created (Home LAN).  
 4. Under **Split Tunnels**, click **Override** and add the IP address ranges of your local network to the **Exclude** list (e.g., 10.0.1.0/24).  
 5. Save the profile and drag it to the top of the list to give it the highest priority.
+6. For more details, refer to the [official CloudFlare documentation on Device Profiles](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/configure-warp/device-profiles/).
 
-## **Making the Server Run on Startup**
+## **Making the Container Run on Startup**
 
 For a reliable setup, the container should start automatically with the host machine.
 
-* **On Linux:** The \--restart unless-stopped flag you already used is sufficient. Docker's systemd service will automatically start the container on boot. This is the recommended method for a headless server.  
+* **On Linux:** The \--restart unless-stopped flag you already used is sufficient. Docker's systemd service will automatically start the container on boot. This is the recommended method for a headless container.  
 * **On Windows / macOS:** Ensure that Docker Desktop is configured to launch on system startup ("Start Docker Desktop when you log in"). The \--restart policy will ensure your container starts whenever the Docker daemon is running.
 
 ## **Contributing**
