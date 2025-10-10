@@ -1,2 +1,96 @@
-# warp-detector
-A simple Docker container to run a local TLS server for Cloudflare WARP's Managed Network detection.
+# **Cloudflare WARP Local Network Detector**
+
+A simple, containerized TLS server designed to enable Cloudflare WARP's "Managed Network" feature for easy local network detection. This allows the WARP client to intelligently detect when it is on a trusted network and apply custom profiles, such as excluding local traffic from the tunnel. This container simplifies the process of setting up the required TLS detection endpoint.
+
+## **Prerequisites**
+
+Before you begin, ensure you have the following:
+
+* A host machine (Linux, macOS, or Windows) with a static or DHCP-reserved IP address. A Linux host is recommended for easily running the service on system boot.  
+* Docker Desktop installed.  
+* A Cloudflare Zero Trust account.  
+* Git installed on your host machine.
+
+## **Quick Start Guide**
+
+This guide will walk you through building the container, generating your unique certificate, and starting the server.
+
+**1\. Clone the Repository**
+
+Open a terminal (or PowerShell) and clone the project files:
+
+git clone https://github.com/your-username/warp-detector.git  
+cd warp-detector
+
+**2\. Build the Docker Image**
+
+Build the local container image from the source code. This image will be named warp-detector-server.
+
+docker build \-t warp-detector-server .
+
+**3\. Run the One-Time Interactive Setup**
+
+This command will temporarily start the container to generate a unique TLS certificate. The certificate will be stored in a persistent Docker volume named warp-certs.
+
+docker run \-it \--rm \-v warp-certs:/certs warp-detector-server setup
+
+The script will prompt you for a hostname. After it runs, it will print a **SHA-256 Fingerprint**. Copy this value and save it for the next step.
+
+**4\. Start the Server**
+
+Run the container in detached mode to start the server in the background. It will automatically restart unless manually stopped.
+
+docker run \-d \--restart unless-stopped \--name warp-detector \-p 4443:4443 \-v warp-certs:/certs \--init warp-detector-server
+
+**Note:** By default, the server listens on all network interfaces. To bind to a specific IP, replace the port mapping with \-p YOUR\_IP:4443:4443.
+
+## **Configuration**
+
+### **Part 1: Configure Cloudflare Zero Trust**
+
+1. Log in to your Zero Trust dashboard and go to **Settings \> WARP Client**.  
+2. Find the **Network locations** section and click **Add new**.  
+3. Fill out the form with the following details:  
+   * **Name:** A descriptive name, like Home LAN.  
+   * **Host and Port:** The hostname you chose during setup followed by :4443 (e.g., warp-detector.homelan.local:4443).  
+   * **TLS Cert SHA-256:** Paste the fingerprint you copied from the setup step.  
+4. Click **Save**.
+
+### **Part 2: Configure Client Devices**
+
+For the WARP client to find your new server, you must make its hostname reachable.
+
+* Method 1 (Recommended): Local DNS Server  
+  If you run a local DNS server (like Pi-hole), create an A Record that points the hostname to the internal IP address of the machine running the Docker container.  
+* Method 2: Edit hosts File  
+  On each client device, manually edit the hosts file to add the entry provided by the setup script's output.  
+  * **Windows:** C:\\Windows\\System\\drivers\\etc\\hosts  
+  * **macOS / Linux:** /etc/hosts
+
+### **Part 3: Create a Cloudflare Device Profile**
+
+Create a new profile to apply custom rules when a device is on your managed network.
+
+1. In the Zero Trust dashboard, navigate to **Settings \> WARP Client \> Device profiles**.  
+2. Click **Create new profile** and give it a name (e.g., On-Prem LAN).  
+3. Create an expression with the following:  
+   * **Selector:** Managed network  
+   * **Operator:** is  
+   * **Value:** Select the network location you just created (Home LAN).  
+4. Under **Split Tunnels**, click **Override** and add the IP address ranges of your local network to the **Exclude** list (e.g., 10.0.1.0/24).  
+5. Save the profile and drag it to the top of the list to give it the highest priority.
+
+## **Making the Server Run on Startup**
+
+For a reliable setup, the container should start automatically with the host machine.
+
+* **On Linux:** The \--restart unless-stopped flag you already used is sufficient. Docker's systemd service will automatically start the container on boot. This is the recommended method for a headless server.  
+* **On Windows / macOS:** Ensure that Docker Desktop is configured to launch on system startup ("Start Docker Desktop when you log in"). The \--restart policy will ensure your container starts whenever the Docker daemon is running.
+
+## **Contributing**
+
+Contributions are welcome\! Please feel free to submit a pull request or open an issue.
+
+## **License**
+
+This project is licensed under the MIT License.
