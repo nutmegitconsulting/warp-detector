@@ -19,7 +19,7 @@ This guide will walk you through building the container, generating your unique 
 
 Open a terminal (or PowerShell) and clone the project files:
 
-git clone https://github.com/your-username/warp-detector.git  
+git clone https://github.com/nutmegitconsulting/warp-detector.git  
 cd warp-detector
 
 **2\. Build the Docker Image**
