@@ -29,7 +29,7 @@ cd warp-detector
 Build the local container image from the source code. This image will be named warp-detector-server.
 
 ```
-docker build -t warp-detector-server .
+docker build -t warp-detector-server ./src
 ```
 
 **3\. Run the One-Time Interactive Setup**
