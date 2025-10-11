@@ -72,7 +72,7 @@ docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443
 For the WARP client to find your new container, you must make its hostname reachable.
 
 * Method 1 (Recommended): Local DNS Server  
-  If you run a local DNS server (like Pi-hole), create an A Record that points the hostname to the internal IP address of the machine running the Docker container.  
+  If you run a local DNS server, create a record that points the hostname to the internal IP address of the host running the Docker container.  
 * Method 2: Edit hosts File  
   On each client device, manually edit the hosts file to add the entry provided by the setup script's output.  
   * **Windows:** C:\\Windows\\System\\drivers\\etc\\hosts  
