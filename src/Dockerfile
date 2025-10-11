@@ -18,8 +18,8 @@ COPY . .
 RUN chmod +x /app/entrypoint.sh
 
 # Change ownership of the app directory and its contents to the 'app' user.
-# This is CRITICAL. It gives 'app' permission to execute the scripts.
 RUN chown -R app:app /app
+RUN mkdir /certs && chown -R app:app /certs
 
 # Switch to the non-root user for all subsequent commands
 # This is the line in question.
