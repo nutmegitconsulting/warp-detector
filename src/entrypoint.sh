@@ -1,13 +1,17 @@
 #!/bin/bash
+set -e
 
-# Define the path for the certificate key
-CERT_KEY_PATH="/certs/homelan.key"
+# This script runs as root to handle file permissions, then drops privileges
+# before executing the final python server process.
 
-# Function to run the interactive setup
+# --- Function to run the interactive setup ---
 run_setup() {
     echo "--- First-Time Setup ---"
     echo "This script will generate a unique TLS certificate for your network."
     
+    local CERT_KEY="/certs/homelan.key"
+    local CERT_PEM="/certs/homelan.pem"
+
     # Prompt for hostname
     read -p "Enter a hostname for this detector [warp-detector.homelan.local]: " HOSTNAME
     HOSTNAME=${HOSTNAME:-warp-detector.homelan.local}
@@ -16,9 +20,12 @@ run_setup() {
     
     # Create the certificate and key in the /certs volume
     openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
-        -keyout /certs/homelan.key -out /certs/homelan.pem \
+        -keyout "$CERT_KEY" -out "$CERT_PEM" \
         -subj "/CN=${HOSTNAME}" \
         -addext "subjectAltName=DNS:${HOSTNAME}"
+
+    # ---> FIX #1: Change ownership of the new certs to the 'app' user <---
+    chown app:app "$CERT_KEY" "$CERT_PEM"
 
     echo "Certificate generated successfully."
     echo ""
@@ -28,7 +35,7 @@ run_setup() {
     
     # Calculate and display the SHA-256 fingerprint without colons
     echo "1. SHA-256 Fingerprint (for Cloudflare Managed Network):"
-    FINGERPRINT=$(openssl x509 -noout -fingerprint -sha256 -inform pem -in /certs/homelan.pem | cut -d '=' -f 2 | tr -d ':')
+    FINGERPRINT=$(openssl x509 -noout -fingerprint -sha256 -inform pem -in "$CERT_PEM" | cut -d '=' -f 2 | tr -d ':')
     echo "${FINGERPRINT}"
     echo "sha256 fingerprints usually display with : between every two characters, but CloudFlare requires these to be removed. We took that step for you"
     echo ""
@@ -36,6 +43,7 @@ run_setup() {
 }
 
 # --- Main Logic ---
+CERT_KEY_PATH="/certs/homelan.key"
 
 # Check if the setup command was passed
 if [ "$1" = "setup" ]; then
@@ -55,4 +63,5 @@ fi
 
 # If certificate exists, start the server
 echo "Certificate found. Starting TLS server..."
-exec python3 /app/tls_server.py
+# ---> FIX #2: Drop privileges and execute the server as the 'app' user <---
+exec su -s /bin/sh -c 'python3 /app/tls_server.py' app
