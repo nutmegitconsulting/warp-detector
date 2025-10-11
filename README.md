@@ -29,7 +29,7 @@ cd warp-detector
 Build the local container image from the source code. This image will be named warp-detector-server.
 
 ```
-docker build \-t warp-detector-server .
+docker build -t warp-detector-server .
 ```
 
 **3\. Run the One-Time Interactive Setup**
@@ -37,7 +37,7 @@ docker build \-t warp-detector-server .
 * This command starts the container in interactive mode (-it) and automatically removes it when finished (--rm). Its only purpose is to create your certificate files and display the information you need. The -v warp-certs:/certs part creates a persistent volume named warp-certs where your new certificate will be safely stored.
 
 ```
-docker run \-it \--rm \-v warp-certs:/certs warp-detector-server setup
+docker run -it --rm -v warp-certs:/certs warp-detector-server setup
 ```
 * Follow the On-Screen Prompts:  
    * The script will prompt you to enter a **hostname** (the default is warp-detector.homelan.local).  
