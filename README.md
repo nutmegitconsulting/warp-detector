@@ -77,8 +77,22 @@ For the WARP client to find your new container, you must make its hostname reach
   On each client device, manually edit the hosts file to add the entry provided by the setup script's output.  
   * **Windows:** C:\\Windows\\System\\drivers\\etc\\hosts  
   * **macOS / Linux:** /etc/hosts
+ 
+### **Part 3: Confirm the setup**
 
-### **Part 3: Create a Cloudflare Device Profile**
+A reliable test is to query the certificate fingerprint from a separate system on the same LAN. This validates that the container, the host firewall, and DNS resolution are working for your WARP clients successfully test for the presence of this TLS Endpoint.
+
+Use one of the following commands to retrieve the SHA-256 fingerprint. It should match the fingerprint from the initial container setup and the Managed Network Location you built in Part 1: Configure Cloudflare Zero Trust.
+* From Windows Powershell
+  ```
+  (openssl s_client -connect HOSTNAME_OR_IP:4443 -servername HOSTNAME_OR_IP 2>$null <$null | openssl x509 -fingerprint -sha256 -noout).Split('=')[1].Replace(':','')
+  ```
+* From Linux Terminal
+  ```
+  openssl s_client -connect HOSTNAME_OR_IP:4443 -servername HOSTNAME_OR_IP 2>/dev/null </dev/null | openssl x509 -fingerprint -sha256 -noout | cut -d'=' -f2 | tr -d ':'
+  ```
+
+### **Part 4: Create a Cloudflare Device Profile**
 
 Create a new profile to apply custom rules when a device is on your managed network.
 
