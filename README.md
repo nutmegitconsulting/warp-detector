@@ -29,7 +29,7 @@ cd warp-detector
 Build the local container image from the source code. This image will be named warp-detector-server.
 
 ```
-docker build -t warp-detector-server ./src
+sudo docker build -t warp-detector-server ./src
 ```
 
 **3\. Run the One-Time Interactive Setup**
@@ -37,7 +37,7 @@ docker build -t warp-detector-server ./src
 * This command starts the container in interactive mode (-it) and automatically removes it when finished (--rm). Its only purpose is to create your certificate files and display the information you need. The -v warp-certs:/certs part creates a persistent volume named warp-certs where your new certificate will be safely stored.
 
 ```
-docker run -it --rm -v warp-certs:/certs warp-detector-server setup
+sudo docker run -it --rm -v warp-certs:/certs warp-detector-server setup
 ```
 * Follow the On-Screen Prompts:  
    * The script will prompt you to enter a **hostname** (the default is warp-detector.homelan.local).  
@@ -49,7 +49,7 @@ docker run -it --rm -v warp-certs:/certs warp-detector-server setup
 Run the container in detached mode to start the container in the background. It will automatically restart unless manually stopped.
 
 ```
-docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443 -v warp-certs:/certs --init warp-detector-server
+sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443 -v warp-certs:/certs --init warp-detector-server
 ```
 
 **Note:** Note, this command serves the TLS certificate on every IP of the host machine. If you want to lock to a specific IP, replace 0.0.0.0 with the specific IP. If your host machine only ever has a single IP, you shouldn’t have to worry about this.
