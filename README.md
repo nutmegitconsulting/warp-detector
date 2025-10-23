@@ -69,7 +69,7 @@ sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443
 
 ### **Part 2: Configure DNS**
 
-For the WARP client to find your new container, you must make its hostname reachable.
+For the WARP client to find your new container, you must make its hostname reachable. **Note:** If you used a static IP address instead of a hostname in Part 1 Step 3 Host and Port, then you don't have to do this step.
 
 * Method 1 (Recommended): Local DNS Server  
   If you run a local DNS server, create a record that points the hostname to the internal IP address of the host running the Docker container.  
