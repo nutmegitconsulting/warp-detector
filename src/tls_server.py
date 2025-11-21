@@ -4,7 +4,7 @@ import os
 
 # --- Configuration ---
 HOST_IP = '0.0.0.0'
-PORT = 4443
+PORT = 443
 CERT_DIR = '/certs'
 CERT_FILE = os.path.join(CERT_DIR, 'homelan.pem')
 KEY_FILE = os.path.join(CERT_DIR, 'homelan.key')
