@@ -63,20 +63,20 @@ sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:443:
 2. Find the **Network locations** section and click **Add new**.  
 3. Fill out the form with the following details:  
    * **Name:** A descriptive name, like Home LAN.  
-   * **Host and Port:** The hostname you chose during setup followed by :443 (e.g., warp-detector.homelan.local:443).  
+   * **Host and Port:** The static IP of your container host followed by :443 (e.g., 192.168.1.56:443).  - this used to recommend using hostname, but Cloduflare recommends static IP here instead. Container host is the system that is running the container.
    * **TLS Cert SHA-256:** Paste the fingerprint you copied from the setup step.  
 4. Click **Save**.
 
-### **Part 2: Configure DNS**
+~~### **Part 2: Configure DNS**~~
 
-For the WARP client to find your new container, you must make its hostname reachable. **Note:** If you used a static IP address instead of a hostname in Part 1 Step 3 Host and Port, then you don't have to do this step.
+~~For the WARP client to find your new container, you must make its hostname reachable. **Note:** If you used a static IP address instead of a hostname in Part 1 Step 3 Host and Port, then you don't have to do this step.~~
 
-* Method 1 (Recommended): Local DNS Server  
-  If you run a local DNS server, create a record that points the hostname to the internal IP address of the host running the Docker container.  
-* Method 2: Edit hosts File  
-  On each client device, manually edit the hosts file to add the entry provided by the setup script's output.  
-  * **Windows:** C:\\Windows\\System\\drivers\\etc\\hosts  
-  * **macOS / Linux:** /etc/hosts
+~~* Method 1 (Recommended): Local DNS Server~~
+  ~~If you run a local DNS server, create a record that points the hostname to the internal IP address of the host running the Docker container.~~
+~~* Method 2: Edit hosts File~~
+  ~~On each client device, manually edit the hosts file to add the entry provided by the setup script's output.~~
+  ~~* **Windows:** C:\\Windows\\System\\drivers\\etc\\host~~
+  ~~* **macOS / Linux:** /etc/hosts~~
  
 ### **Part 3: Confirm the setup**
 
