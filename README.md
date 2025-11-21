@@ -63,7 +63,7 @@ sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:443:
 2. Find the **Network locations** section and click **Add new**.  
 3. Fill out the form with the following details:  
    * **Name:** A descriptive name, like Home LAN.  
-   * **Host and Port:** The static IP of your container host followed by :443 (e.g., 192.168.1.56:443).  - this used to recommend using hostname, but Cloduflare recommends static IP here instead. Container host is the system that is running the container.
+   * **Host and Port:** The static IP of your container host followed by :443 (e.g., 192.168.1.56:443).  - this used to recommend using hostname, but Cloudflare recommends static IP here instead. Container host is the system that is running the container.
    * **TLS Cert SHA-256:** Paste the fingerprint you copied from the setup step.  
 4. Click **Save**.
 
