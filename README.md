@@ -49,7 +49,7 @@ sudo docker run -it --rm -v warp-certs:/certs warp-detector-server setup
 Run the container in detached mode to start the container in the background. It will automatically restart unless manually stopped.
 
 ```
-sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443:4443 -v warp-certs:/certs --init warp-detector-server
+sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:443:443 -v warp-certs:/certs --init warp-detector-server
 ```
 
 **Note:** Note, this command serves the TLS certificate on every IP of the host machine. If you want to lock to a specific IP, replace 0.0.0.0 with the specific IP. If your host machine only ever has a single IP, you shouldn’t have to worry about this.
@@ -63,7 +63,7 @@ sudo docker run -d --restart unless-stopped --name warp-detector -p 0.0.0.0:4443
 2. Find the **Network locations** section and click **Add new**.  
 3. Fill out the form with the following details:  
    * **Name:** A descriptive name, like Home LAN.  
-   * **Host and Port:** The hostname you chose during setup followed by :4443 (e.g., warp-detector.homelan.local:4443).  
+   * **Host and Port:** The hostname you chose during setup followed by :443 (e.g., warp-detector.homelan.local:443).  
    * **TLS Cert SHA-256:** Paste the fingerprint you copied from the setup step.  
 4. Click **Save**.
 
@@ -85,11 +85,11 @@ A reliable test is to query the certificate fingerprint from a separate system o
 Use one of the following commands to retrieve the SHA-256 fingerprint. It should match the fingerprint from the initial container setup and the Managed Network Location you built in Part 1: Configure Cloudflare Zero Trust.
 * From Windows Powershell
   ```
-  (openssl s_client -connect HOSTNAME_OR_IP:4443 -servername HOSTNAME_OR_IP 2>$null <$null | openssl x509 -fingerprint -sha256 -noout).Split('=')[1].Replace(':','')
+  (openssl s_client -connect HOSTNAME_OR_IP:443 -servername HOSTNAME_OR_IP 2>$null <$null | openssl x509 -fingerprint -sha256 -noout).Split('=')[1].Replace(':','')
   ```
 * From Linux Terminal
   ```
-  openssl s_client -connect HOSTNAME_OR_IP:4443 -servername HOSTNAME_OR_IP 2>/dev/null </dev/null | openssl x509 -fingerprint -sha256 -noout | cut -d'=' -f2 | tr -d ':'
+  openssl s_client -connect HOSTNAME_OR_IP:443 -servername HOSTNAME_OR_IP 2>/dev/null </dev/null | openssl x509 -fingerprint -sha256 -noout | cut -d'=' -f2 | tr -d ':'
   ```
 
 ### **Part 4: Create a Cloudflare Device Profile**
