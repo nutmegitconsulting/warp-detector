@@ -20,7 +20,7 @@ RUN chmod +x /app/entrypoint.sh
 RUN chown -R app:app /app
 
 # Inform Docker that the container listens on port 4443
-EXPOSE 4443
+EXPOSE 443
 
 # Set the entrypoint to our custom script.
 ENTRYPOINT ["/app/entrypoint.sh"]
