@@ -19,7 +19,7 @@ RUN chmod +x /app/entrypoint.sh
 # Change ownership of the app directory and its contents to the 'app' user.
 RUN chown -R app:app /app
 
-# Inform Docker that the container listens on port 4443
+# Inform Docker that the container listens on port 443
 EXPOSE 443
 
 # Set the entrypoint to our custom script.
